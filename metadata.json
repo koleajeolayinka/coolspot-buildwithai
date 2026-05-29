@@ -1,0 +1,6 @@
+{
+  "name": "CoolSpot",
+  "description": "Elite AI-powered code reviewer that maps directly to the target wireframe layout - analyzing pasted snippets, screenshots, and live URL sources",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

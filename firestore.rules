@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // catch-all default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /reviews/{reviewId} {
+      allow create: if isValidId(reviewId) 
+        && incoming().keys().hasAll(['type', 'inputData', 'reviewText', 'createdAt'])
+        && incoming().keys().size() == 4
+        && isValidReview(incoming())
+        && incoming().createdAt == request.time;
+        
+      allow read, list: if true; // allow public access to reviews for shared/history rendering
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    
+    function incoming() {
+      return request.resource.data;
+    }
+    
+    function isValidReview(data) {
+      return data.type is string && (data.type == 'text' || data.type == 'image' || data.type == 'link')
+        && data.inputData is string && data.inputData.size() <= 5000000
+        && data.reviewText is string && data.reviewText.size() <= 1048576
+        && data.createdAt is timestamp;
+    }
+  }
+}

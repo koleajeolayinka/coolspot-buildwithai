@@ -1,0 +1,36 @@
+{
+  "entities": {
+    "Review": {
+      "title": "Code Review",
+      "description": "A snapshot of reviewed code and the generated response from Gemini",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["text", "image", "link"],
+          "description": "The type of review intake"
+        },
+        "inputData": {
+          "type": "string",
+          "description": "The raw input code, base64 image, or link URL analyzed"
+        },
+        "reviewText": {
+          "type": "string",
+          "description": "The Markdown string returned from Gemini"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the snapshot was saved"
+        }
+      },
+      "required": ["type", "inputData", "reviewText", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Historical reviews logged by users"
+    }
+  }
+}
